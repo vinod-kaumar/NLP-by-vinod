@@ -1,0 +1,12 @@
+pandas
+numpy
+requests
+mysql-connector-python
+nltk
+textblob
+emoji
+spacy
+
+# pip install -r requirements.txt
+# python -m nltk.downloader stopwords punkt punkt_tab wordnet omw-1.4
+# python -m spacy download en_core_web_sm
