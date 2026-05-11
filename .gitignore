@@ -5,10 +5,11 @@ nlp/
 task.txt
 
 # Ignore entire folder
-Day-2/
+Day-3/
 
 # Specific files
 Day-1/student-por.csv
 Day-1/world.sql
 Day-1/test.json
 Day-1/movies.csv
+Day-2/isl_sentences_clean.txt

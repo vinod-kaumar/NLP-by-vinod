@@ -1,5 +1,7 @@
 pandas
 numpy
+matplotlib
+sklearn
 requests
 mysql-connector-python
 nltk
