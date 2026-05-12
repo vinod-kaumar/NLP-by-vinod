@@ -5,7 +5,6 @@ nlp/
 task.txt
 
 # Ignore entire folder
-Day-3/
 
 # Specific files
 Day-1/student-por.csv
