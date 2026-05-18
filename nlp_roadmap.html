@@ -1,0 +1,330 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .roadmap { padding: 2rem 1.5rem; }
+
+  .title-banner {
+    background: linear-gradient(135deg, #e63946, #2196f3, #4caf50);
+    background-size: 200% 200%;
+    border-radius: 14px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  .title-banner h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    font-style: italic;
+  }
+  .title-banner .sub { font-size: 13px; color: rgba(255,255,255,0.82); margin-top: 4px; }
+
+  .level-card {
+    border-radius: 14px;
+    margin-bottom: 1.75rem;
+    overflow: hidden;
+    border: 1.5px solid rgba(0,0,0,0.08);
+  }
+  .level-header {
+    padding: 0.75rem 1.25rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.5px;
+  }
+  .level-body { padding: 1rem 1.25rem; background: #fff; }
+
+  .lv1-hdr { background: linear-gradient(90deg, #e63946, #ff6b6b); }
+  .lv2-hdr { background: linear-gradient(90deg, #2196f3, #00b4d8); }
+  .lv3-hdr { background: linear-gradient(90deg, #9c27b0, #e040fb); }
+  .proj-hdr { background: linear-gradient(90deg, #f77f00, #fcbf49); }
+  .int-hdr  { background: linear-gradient(90deg, #16a34a, #4ade80); }
+
+  .section-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .topic-box {
+    border-radius: 10px;
+    padding: 0.7rem 0.9rem;
+    border: 1.5px solid transparent;
+  }
+  .topic-box h3 {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .topic-box ul {
+    list-style: none;
+    padding: 0;
+  }
+  .topic-box ul li {
+    font-size: 12.5px;
+    padding: 2.5px 0;
+    padding-left: 12px;
+    position: relative;
+    color: #333;
+    line-height: 1.5;
+  }
+  .topic-box ul li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    top: 2.5px;
+    font-size: 10px;
+  }
+  .topic-box ul li ul {
+    margin-top: 3px;
+    padding-left: 10px;
+  }
+  .topic-box ul li ul li::before { content: '◦'; }
+
+  /* RED family */
+  .box-red { background: #fff0f1; border-color: #ffb3b8; }
+  .box-red h3 { color: #c0001a; }
+  .box-red ul li::before { color: #e63946; }
+
+  /* BLUE family */
+  .box-blue { background: #e8f4fd; border-color: #90caf9; }
+  .box-blue h3 { color: #0b559b; }
+  .box-blue ul li::before { color: #2196f3; }
+
+  /* GREEN family */
+  .box-green { background: #edfbee; border-color: #86efac; }
+  .box-green h3 { color: #14532d; }
+  .box-green ul li::before { color: #16a34a; }
+
+  /* ORANGE family */
+  .box-orange { background: #fff7ed; border-color: #fed7aa; }
+  .box-orange h3 { color: #9a3412; }
+  .box-orange ul li::before { color: #ea580c; }
+
+  /* PURPLE family */
+  .box-purple { background: #faf0fe; border-color: #d8b4fe; }
+  .box-purple h3 { color: #5b21b6; }
+  .box-purple ul li::before { color: #9c27b0; }
+
+  /* CYAN family */
+  .box-cyan { background: #e0f7fa; border-color: #80deea; }
+  .box-cyan h3 { color: #006064; }
+  .box-cyan ul li::before { color: #00acc1; }
+
+  /* PINK family */
+  .box-pink { background: #fff0f6; border-color: #f9a8d4; }
+  .box-pink h3 { color: #86185c; }
+  .box-pink ul li::before { color: #ec4899; }
+
+  /* YELLOW-GREEN */
+  .box-lime { background: #f4fce3; border-color: #bef264; }
+  .box-lime h3 { color: #3a5a00; }
+  .box-lime ul li::before { color: #65a30d; }
+
+  .dot-icon { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+</style>
+
+<div class="roadmap">
+
+  <div class="title-banner">
+    <h1>NLP: Roadmap</h1>
+    <div class="sub">Natural Language Processing — Complete Learning Path</div>
+  </div>
+
+  <!-- LEVEL 1 -->
+  <div class="level-card">
+    <div class="level-header lv1-hdr">⬡ Level 1 — Foundations</div>
+    <div class="level-body">
+      <div class="section-grid">
+        <div class="topic-box box-red">
+          <h3><span class="dot-icon" style="background:#e63946"></span>Core Skills</h3>
+          <ul><li>Strings</li><li>Regular Expressions (Regex)</li></ul>
+        </div>
+        <div class="topic-box box-blue">
+          <h3><span class="dot-icon" style="background:#2196f3"></span>ML Techniques</h3>
+          <ul><li>Supervised Learning</li><li>Unsupervised Learning</li><li>Reinforcement Learning</li></ul>
+        </div>
+        <div class="topic-box box-green">
+          <h3><span class="dot-icon" style="background:#16a34a"></span>Language Fundamentals</h3>
+          <ul>
+            <li>Structure of Language</li>
+            <li>POS Tagging</li>
+            <li>Phonemes, Morphemes, Lexemes</li>
+            <li>Context, Syntax, Semantics, Grammar</li>
+          </ul>
+        </div>
+        <div class="topic-box box-orange">
+          <h3><span class="dot-icon" style="background:#ea580c"></span>Data Acquisition</h3>
+          <ul>
+            <li>Web Scraping</li>
+            <li>Text, CSV, JSON, PDFs</li>
+            <li>Working with APIs</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top: 1rem; border-top: 1.5px dashed #f0c0c0; padding-top: 1rem;">
+        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #e63946; margin-bottom: 0.6rem;">NLP Basics</div>
+        <div class="section-grid">
+          <div class="topic-box box-pink">
+            <h3><span class="dot-icon" style="background:#ec4899"></span>Text Preprocessing</h3>
+            <ul>
+              <li>Basic</li>
+              <li>Advanced:
+                <ul>
+                  <li>POS Tagging</li>
+                  <li>Parsing</li>
+                  <li>Coreference Resolution</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="topic-box box-cyan">
+            <h3><span class="dot-icon" style="background:#00acc1"></span>Text Representation</h3>
+            <ul>
+              <li>OHE</li><li>TF-IDF</li><li>BOW</li>
+              <li>N-grams, Bi-grams, Unigrams</li>
+              <li>Word Embeddings</li>
+            </ul>
+          </div>
+          <div class="topic-box box-purple">
+            <h3><span class="dot-icon" style="background:#9c27b0"></span>Libraries</h3>
+            <ul><li>NLTK</li><li>spaCy</li><li>Gensim</li></ul>
+          </div>
+          <div class="topic-box box-lime">
+            <h3><span class="dot-icon" style="background:#65a30d"></span>Applications</h3>
+            <ul>
+              <li>Text/Document Classification</li>
+              <li>Sentiment Analysis</li>
+              <li>Topic Modeling</li>
+              <li>Text Clustering</li>
+              <li>NER</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEVEL 2 -->
+  <div class="level-card">
+    <div class="level-header lv2-hdr">⬡ Level 2 — Deep Learning for NLP</div>
+    <div class="level-body">
+      <div class="section-grid">
+        <div class="topic-box box-blue">
+          <h3><span class="dot-icon" style="background:#2196f3"></span>DL Basics</h3>
+          <ul>
+            <li>ANN</li><li>Backpropagation</li><li>SGD</li>
+            <li>Optimizers</li>
+            <li>PyTorch / TensorFlow / Keras</li>
+          </ul>
+        </div>
+        <div class="topic-box box-cyan">
+          <h3><span class="dot-icon" style="background:#00acc1"></span>DL Architectures</h3>
+          <ul>
+            <li>CNNs</li><li>RNNs</li><li>LSTMs</li><li>GRUs</li>
+          </ul>
+        </div>
+        <div class="topic-box box-purple">
+          <h3><span class="dot-icon" style="background:#9c27b0"></span>Seq2Seq Models</h3>
+          <ul>
+            <li>Encoder-Decoder</li>
+            <li>Attention Mechanism</li>
+            <li>Transformers</li>
+            <li>BERT</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEVEL 3 -->
+  <div class="level-card">
+    <div class="level-header lv3-hdr">⬡ Level 3 — Advanced NLP</div>
+    <div class="level-body">
+      <div class="section-grid">
+        <div class="topic-box box-purple">
+          <h3><span class="dot-icon" style="background:#9c27b0"></span>Advanced Techniques</h3>
+          <ul>
+            <li>Transfer Learning</li>
+            <li>Machine Translation</li>
+            <li>QnA Systems</li>
+            <li>Text Summarization</li>
+            <li>Chatbot &amp; Speech Recognition</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="level-card">
+    <div class="level-header proj-hdr">⬡ Projects</div>
+    <div class="level-body">
+      <div class="section-grid">
+        <div class="topic-box box-orange">
+          <h3><span class="dot-icon" style="background:#ea580c"></span>Core Projects</h3>
+          <ul>
+            <li>Text Classification</li><li>Sentiment Analysis</li>
+            <li>Topic Modeling</li><li>Text Clustering</li>
+            <li>NER</li><li>Machine Translation</li>
+            <li>QnA Systems</li><li>Text Summarization</li>
+            <li>Chatbot &amp; Speech Recognition</li>
+          </ul>
+        </div>
+        <div class="topic-box box-blue">
+          <h3><span class="dot-icon" style="background:#2196f3"></span>Cloud APIs</h3>
+          <ul>
+            <li>Google Cloud NLP API</li>
+            <li>Azure Text Analytics API</li>
+            <li>Amazon Comprehend</li>
+          </ul>
+        </div>
+        <div class="topic-box box-green">
+          <h3><span class="dot-icon" style="background:#16a34a"></span>End-to-End</h3>
+          <ul>
+            <li>Project 1: Sentiment Analysis</li>
+            <li>Project 2: Text Summarization</li>
+            <li>Project 3: Chatbot Development</li>
+          </ul>
+        </div>
+        <div class="topic-box box-cyan">
+          <h3><span class="dot-icon" style="background:#00acc1"></span>Monitoring</h3>
+          <ul>
+            <li>Model Performance Monitoring</li>
+            <li>Continuous Learning</li>
+            <li>Regular Updates</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERVIEW -->
+  <div class="level-card">
+    <div class="level-header int-hdr">⬡ Interview Preparation</div>
+    <div class="level-body">
+      <div class="section-grid">
+        <div class="topic-box box-green">
+          <h3><span class="dot-icon" style="background:#16a34a"></span>Preparation Topics</h3>
+          <ul>
+            <li>Project Showcase &amp; QnA</li>
+            <li>Common NLP Questions</li>
+            <li>Technical Questions</li>
+            <li>Behavioral Questions</li>
+            <li>Case Studies &amp; Problem-Solving</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
