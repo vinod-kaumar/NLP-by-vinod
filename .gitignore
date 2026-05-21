@@ -7,9 +7,11 @@ task.txt
 # Ignore entire folder
 
 # Specific files
-Day-1/student-por.csv
-Day-1/world.sql
-Day-1/test.json
-Day-1/movies.csv
+03-Data-Acquisition/student-por.csv
+03-Data-Acquisition/world.sql
+03-Data-Acquisition/test.json
+03-Data-Acquisition/movies.csv
+03-Data-Acquisition/ambitionbox_company_data.csv
+
 Day-2/isl_sentences_clean.txt
 Day-5/data
