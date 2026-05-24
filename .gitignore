@@ -5,6 +5,8 @@ nlp/
 task.txt
 
 # Ignore entire folder
+blogs/
+04-NLP-Basics/Feature-Extraction/
 
 # Specific files
 03-Data-Acquisition/student-por.csv
