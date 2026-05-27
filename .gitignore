@@ -6,9 +6,10 @@ task.txt
 
 # Ignore entire folder
 blogs/
-04-NLP-Basics/2_01_what_is_FE.ipynb
-04-NLP-Basics/2_02_word_count.ipynb
 04-NLP-Basics/2_03_freq_distribution_FE.ipynb
+04-NLP-Basics/2_06_sentence_embeddings.ipynb
+04-NLP-Basics/1_07_Stemming_Lemmatization.ipynb
+
 
 # Specific files
 03-Data-Acquisition/student-por.csv
