@@ -6,8 +6,7 @@ task.txt
 
 # Ignore entire folder
 blogs/
-04-NLP-Basics/2_03_freq_distribution_FE.ipynb
-04-NLP-Basics/2_06_sentence_embeddings.ipynb
+04-NLP-Basics/2_08_word_embeddings_pretrained_GLOVE.ipynb
 04-NLP-Basics/1_07_Stemming_Lemmatization.ipynb
 
 
