@@ -6,8 +6,6 @@ task.txt
 
 # Ignore entire folder
 blogs/
-04-NLP-Basics/2_08_word_embeddings_pretrained_GLOVE.ipynb
-04-NLP-Basics/2_09_co_occurrence_matrix_GLOVE.ipynb
 04-NLP-Basics/2_10_Word_embeddings_pretrained_Word2Vec.ipynb
 04-NLP-Basics/2_11_Word_embeddings_custom_Word2Vec.ipynb
 
