@@ -6,8 +6,8 @@ task.txt
 
 # Ignore entire folder
 blogs/
-04-NLP-Basics/2_10_Word_embeddings_pretrained_Word2Vec.ipynb
-04-NLP-Basics/2_11_Word_embeddings_custom_Word2Vec.ipynb
+05_NLP_Libraries
+04-NLP-Basics/2_12_doc2vec.ipynb
 
 
 
