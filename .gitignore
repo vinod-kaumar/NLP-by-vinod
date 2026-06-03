@@ -6,9 +6,7 @@ task.txt
 
 # Ignore entire folder
 blogs/
-05_NLP_Libraries
-04-NLP-Basics/2_12_doc2vec.ipynb
-
+06_Deep_learning/
 
 
 # Specific files
