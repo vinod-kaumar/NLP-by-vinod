@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LSTM Notes - Long Short-Term Memory</title>
+
+<style>
+  :root{
+    --purple:#7c3aed;
+    --blue:#2563eb;
+    --cyan:#06b6d4;
+    --green:#16a34a;
+    --red:#dc2626;
+    --orange:#ea580c;
+    --yellow:#ca8a04;
+    --dark:#0f172a;
+    --text:#1f2937;
+    --muted:#64748b;
+    --border:#e5e7eb;
+    --bg:#f8fafc;
+  }
+
+  body{
+    margin:0;
+    background:linear-gradient(135deg,#f8fafc,#eef2ff);
+    font-family:Arial, Helvetica, sans-serif;
+    color:var(--text);
+    line-height:1.6;
+  }
+
+  .page{
+    max-width:1100px;
+    margin:0 auto;
+    padding:28px 18px 50px;
+  }
+
+  .hero{
+    background:linear-gradient(135deg,#7c3aed,#2563eb,#06b6d4);
+    color:#fff;
+    border-radius:22px;
+    padding:28px 22px;
+    text-align:center;
+    box-shadow:0 16px 35px rgba(37,99,235,0.25);
+    margin-bottom:26px;
+  }
+
+  .hero h1{
+    margin:0;
+    font-size:34px;
+    letter-spacing:.5px;
+  }
+
+  .hero p{
+    margin:8px 0 0;
+    color:rgba(255,255,255,.9);
+    font-size:15px;
+  }
+
+  .card{
+    background:#fff;
+    border:1px solid rgba(15,23,42,.08);
+    border-radius:18px;
+    overflow:hidden;
+    margin:22px 0;
+    box-shadow:0 8px 22px rgba(15,23,42,.08);
+  }
+
+  .card-header{
+    color:#fff;
+    padding:13px 18px;
+    font-weight:800;
+    font-size:18px;
+    letter-spacing:.3px;
+  }
+
+  .purple{background:linear-gradient(90deg,#7c3aed,#a855f7);}
+  .blue{background:linear-gradient(90deg,#2563eb,#06b6d4);}
+  .red{background:linear-gradient(90deg,#dc2626,#fb7185);}
+  .green{background:linear-gradient(90deg,#16a34a,#4ade80);}
+  .orange{background:linear-gradient(90deg,#ea580c,#fbbf24);}
+  .dark{background:linear-gradient(90deg,#0f172a,#334155);}
+
+  .card-body{
+    padding:18px;
+  }
+
+  .note{
+    background:#f5f3ff;
+    border-left:5px solid var(--purple);
+    border-radius:12px;
+    padding:12px 14px;
+    margin:12px 0;
+  }
+
+  .warning{
+    background:#fff1f2;
+    border-left:5px solid var(--red);
+    border-radius:12px;
+    padding:12px 14px;
+    margin:14px 0;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:14px;
+    margin-top:14px;
+  }
+
+  .box{
+    border-radius:15px;
+    padding:14px;
+    border:1.5px solid;
+  }
+
+  .box h3{
+    margin:0 0 8px;
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:.7px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+
+  .box ul{
+    margin:0;
+    padding-left:18px;
+  }
+
+  .box li{
+    margin:5px 0;
+    font-size:14px;
+  }
+
+  .box-purple{background:#faf0ff;border-color:#d8b4fe;}
+  .box-purple h3{color:#6d28d9;}
+
+  .box-blue{background:#eff6ff;border-color:#93c5fd;}
+  .box-blue h3{color:#1d4ed8;}
+
+  .box-red{background:#fff1f2;border-color:#fda4af;}
+  .box-red h3{color:#be123c;}
+
+  .box-green{background:#f0fdf4;border-color:#86efac;}
+  .box-green h3{color:#166534;}
+
+  .box-orange{background:#fff7ed;border-color:#fed7aa;}
+  .box-orange h3{color:#9a3412;}
+
+  .box-cyan{background:#ecfeff;border-color:#67e8f9;}
+  .box-cyan h3{color:#0e7490;}
+
+  .box-yellow{background:#fefce8;border-color:#fde68a;}
+  .box-yellow h3{color:#854d0e;}
+
+  .dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    display:inline-block;
+  }
+
+  .quote{
+    background:#0f172a;
+    color:#e5e7eb;
+    border-radius:13px;
+    padding:12px 14px;
+    font-family:Consolas, monospace;
+    overflow-x:auto;
+    margin:12px 0;
+  }
+
+  .arch{
+    background:linear-gradient(135deg,#f8fafc,#eef2ff);
+    border:2px solid #c4b5fd;
+    border-radius:20px;
+    padding:18px;
+    margin:16px 0;
+  }
+
+  .arch-title{
+    text-align:center;
+    font-weight:800;
+    color:#4338ca;
+    margin-bottom:14px;
+  }
+
+  .flow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:12px 0;
+  }
+
+  .node{
+    min-width:125px;
+    border-radius:13px;
+    border:1.5px solid;
+    padding:10px 12px;
+    text-align:center;
+    font-weight:700;
+    font-size:14px;
+  }
+
+  .node small{
+    display:block;
+    font-weight:700;
+    opacity:.9;
+    margin-top:3px;
+  }
+
+  .n-input{background:#dbeafe;border-color:#3b82f6;color:#1e3a8a;}
+  .n-hidden{background:#dcfce7;border-color:#22c55e;color:#14532d;}
+  .n-cell{background:#fef3c7;border-color:#f59e0b;color:#78350f;}
+  .n-gate{background:#f5d0fe;border-color:#d946ef;color:#701a75;}
+  .n-output{background:#fee2e2;border-color:#ef4444;color:#7f1d1d;}
+  .n-dark{background:#e2e8f0;border-color:#475569;color:#0f172a;}
+
+  .arrow{
+    font-size:24px;
+    font-weight:900;
+    color:#475569;
+  }
+
+  .memory{
+    background:linear-gradient(90deg,#fef3c7,#fde68a,#fef3c7);
+    border:2px solid #f59e0b;
+    color:#78350f;
+    border-radius:15px;
+    padding:12px;
+    text-align:center;
+    font-weight:800;
+    max-width:760px;
+    margin:14px auto;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:12px;
+    font-size:14px;
+    background:#fff;
+  }
+
+  th{
+    background:#111827;
+    color:#fff;
+    padding:10px;
+    text-align:left;
+  }
+
+  td{
+    border:1px solid #e5e7eb;
+    padding:10px;
+    vertical-align:top;
+  }
+
+  tr:nth-child(even) td{
+    background:#f9fafb;
+  }
+
+  .table-wrap{
+    overflow-x:auto;
+  }
+
+  .tag{
+    display:inline-block;
+    padding:5px 10px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:800;
+    margin:4px;
+  }
+
+  .tag-purple{background:#ede9fe;color:#5b21b6;}
+  .tag-blue{background:#dbeafe;color:#1e40af;}
+  .tag-green{background:#dcfce7;color:#166534;}
+  .tag-red{background:#ffe4e6;color:#be123c;}
+  .tag-orange{background:#ffedd5;color:#9a3412;}
+
+  .formula{
+    background:#0f172a;
+    color:#e5e7eb;
+    border-radius:12px;
+    padding:10px 12px;
+    font-family:Consolas, monospace;
+    margin:10px 0;
+    overflow-x:auto;
+  }
+
+  @media(max-width:600px){
+    .hero h1{font-size:26px;}
+    .card-body{padding:14px;}
+    .node{min-width:110px;font-size:13px;}
+    .arrow{font-size:20px;}
+  }
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <div class="hero">
+    <h1>LSTM: Long Short-Term Memory</h1>
+    <p>A gated RNN architecture for handling long-term dependencies in sequential data</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header purple">⬡ 1. What is LSTM?</div>
+    <div class="card-body">
+      <div class="note">
+        <b>LSTM</b> stands for <b>Long Short-Term Memory</b>. It is an improved version of RNN that is designed to remember important information for a long time in sequential data.
+      </div>
+
+      <div class="grid">
+        <div class="box box-purple">
+          <h3><span class="dot" style="background:#7c3aed"></span>Main Idea</h3>
+          <ul>
+            <li>LSTM processes data step by step like RNN.</li>
+            <li>It has a special memory system.</li>
+            <li>It decides what to remember, forget, and output.</li>
+          </ul>
+        </div>
+
+        <div class="box box-blue">
+          <h3><span class="dot" style="background:#2563eb"></span>Used For</h3>
+          <ul>
+            <li>Text classification</li>
+            <li>Sentiment analysis</li>
+            <li>Speech recognition</li>
+            <li>Machine translation</li>
+            <li>Time-series prediction</li>
+          </ul>
+        </div>
+
+        <div class="box box-green">
+          <h3><span class="dot" style="background:#16a34a"></span>Core Strength</h3>
+          <ul>
+            <li>Handles long sequences better than simple RNN.</li>
+            <li>Preserves long-term context.</li>
+            <li>Reduces vanishing gradient problem.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header red">⬡ 2. Why do we need LSTM?</div>
+    <div class="card-body">
+      <p>Simple RNNs struggle when important information appears far behind in the sequence.</p>
+
+      <div class="grid">
+        <div class="box box-red">
+          <h3><span class="dot" style="background:#dc2626"></span>Problems in Simple RNN</h3>
+          <ul>
+            <li>Difficulty in learning long-term dependencies.</li>
+            <li>Vanishing gradient problem.</li>
+            <li>Exploding gradient problem.</li>
+            <li>Old context may be overwritten by new words.</li>
+            <li>Long sequences become hard to remember.</li>
+          </ul>
+        </div>
+
+        <div class="box box-orange">
+          <h3><span class="dot" style="background:#ea580c"></span>Reason</h3>
+          <ul>
+            <li>RNN mainly uses one hidden state.</li>
+            <li>The same path carries both short-term and long-term information.</li>
+            <li>As sequence length increases, earlier information becomes weak.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="warning">
+        <b>Important correction:</b> LSTM does not have two hidden states. It has one <b>hidden state h<sub>t</sub></b> and one <b>cell state C<sub>t</sub></b>. The cell state behaves like long-term memory, while the hidden state behaves like short-term or current context.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header blue">⬡ 3. Intuition: Long-Term Dependency</div>
+    <div class="card-body">
+      <p>Consider this sentence:</p>
+      <div class="quote">Vinod is a student of B.Tech final year. He studies at VNIT Nagpur.</div>
+
+      <div class="grid">
+        <div class="box box-cyan">
+          <h3><span class="dot" style="background:#0891b2"></span>Short-Term Context</h3>
+          <ul>
+            <li>Current words around the present time step.</li>
+            <li>Example: while reading “He studies”, the current local context is “He studies”.</li>
+          </ul>
+        </div>
+
+        <div class="box box-yellow">
+          <h3><span class="dot" style="background:#ca8a04"></span>Long-Term Context</h3>
+          <ul>
+            <li>Information from an earlier part of the sequence.</li>
+            <li>Example: “He” refers to Vinod.</li>
+            <li>The model must remember that Vinod is male.</li>
+          </ul>
+        </div>
+
+        <div class="box box-green">
+          <h3><span class="dot" style="background:#16a34a"></span>LSTM Role</h3>
+          <ul>
+            <li>Stores useful information in the cell state.</li>
+            <li>Carries important context forward.</li>
+            <li>Uses gates to control memory flow.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header dark">⬡ 4. LSTM Architecture Overview</div>
+    <div class="card-body">
+      <p>At every time step <b>t</b>, an LSTM block receives three inputs and produces two outputs.</p>
+
+      <div class="arch">
+        <div class="arch-title">LSTM Block: Inputs, Gates, and Outputs</div>
+
+        <div class="flow">
+          <div class="node n-input">Current Input<small>x<sub>t</sub></small></div>
+          <div class="arrow">+</div>
+          <div class="node n-hidden">Previous Hidden<small>h<sub>t-1</sub></small></div>
+          <div class="arrow">+</div>
+          <div class="node n-cell">Previous Cell<small>C<sub>t-1</sub></small></div>
+        </div>
+
+        <div class="flow"><div class="arrow">↓</div></div>
+
+        <div class="flow">
+          <div class="node n-gate">Forget Gate<small>f<sub>t</sub></small></div>
+          <div class="arrow">→</div>
+          <div class="node n-gate">Input Gate<small>i<sub>t</sub></small></div>
+          <div class="arrow">→</div>
+          <div class="node n-gate">Output Gate<small>o<sub>t</sub></small></div>
+        </div>
+
+        <div class="memory">
+          Cell State Highway: C<sub>t-1</sub> → C<sub>t</sub><br>
+          Carries long-term memory through the sequence
+        </div>
+
+        <div class="flow">
+          <div class="node n-output">Current Cell State<small>C<sub>t</sub></small></div>
+          <div class="arrow">+</div>
+          <div class="node n-output">Current Hidden State<small>h<sub>t</sub></small></div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <tr>
+            <th>Component</th>
+            <th>Symbol</th>
+            <th>Meaning</th>
+          </tr>
+          <tr>
+            <td>Current Input</td>
+            <td>x<sub>t</sub></td>
+            <td>The input word, token, or vector at current time step.</td>
+          </tr>
+          <tr>
+            <td>Previous Hidden State</td>
+            <td>h<sub>t-1</sub></td>
+            <td>Short-term context from the previous time step.</td>
+          </tr>
+          <tr>
+            <td>Previous Cell State</td>
+            <td>C<sub>t-1</sub></td>
+            <td>Long-term memory from the previous time step.</td>
+          </tr>
+          <tr>
+            <td>Current Cell State</td>
+            <td>C<sub>t</sub></td>
+            <td>Updated long-term memory.</td>
+          </tr>
+          <tr>
+            <td>Current Hidden State</td>
+            <td>h<sub>t</sub></td>
+            <td>Current output and short-term memory passed forward.</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header green">⬡ 5. Cell State vs Hidden State</div>
+    <div class="card-body">
+      <div class="grid">
+        <div class="box box-yellow">
+          <h3><span class="dot" style="background:#ca8a04"></span>Cell State C<sub>t</sub></h3>
+          <ul>
+            <li>Acts like long-term memory.</li>
+            <li>Carries useful information across many time steps.</li>
+            <li>Information flows through it with fewer transformations.</li>
+            <li>Helps reduce the vanishing gradient problem.</li>
+          </ul>
+        </div>
+
+        <div class="box box-blue">
+          <h3><span class="dot" style="background:#2563eb"></span>Hidden State h<sub>t</sub></h3>
+          <ul>
+            <li>Acts like short-term or current memory.</li>
+            <li>Represents the output of the current time step.</li>
+            <li>Passed to the next LSTM cell.</li>
+            <li>Used for prediction or further sequence processing.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="note">
+        <b>Simple memory intuition:</b> C<sub>t</sub> remembers important long-term information. h<sub>t</sub> focuses on the current output and recent context.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header orange">⬡ 6. Three Gates of LSTM</div>
+    <div class="card-body">
+      <p>LSTM has three main gates. Each gate controls the flow of information.</p>
+
+      <div class="grid">
+        <div class="box box-red">
+          <h3><span class="dot" style="background:#dc2626"></span>1. Forget Gate</h3>
+          <p><b>Question:</b> What old information should I forget?</p>
+          <p><b>Purpose:</b> Removes useless information from previous cell state.</p>
+          <p><b>Range:</b> 0 to 1 using sigmoid.</p>
+        </div>
+
+        <div class="box box-green">
+          <h3><span class="dot" style="background:#16a34a"></span>2. Input Gate</h3>
+          <p><b>Question:</b> What new information should I store?</p>
+          <p><b>Purpose:</b> Adds useful new information to cell state.</p>
+          <p><b>Uses:</b> Sigmoid + tanh.</p>
+        </div>
+
+        <div class="box box-blue">
+          <h3><span class="dot" style="background:#2563eb"></span>3. Output Gate</h3>
+          <p><b>Question:</b> What should I output now?</p>
+          <p><b>Purpose:</b> Creates current hidden state h<sub>t</sub>.</p>
+          <p><b>Uses:</b> Sigmoid and updated cell state.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header red">⬡ 7. Forget Gate</div>
+    <div class="card-body">
+      <p>The forget gate decides what information should be removed from the previous cell state C<sub>t-1</sub>.</p>
+
+      <div class="arch">
+        <div class="arch-title">Forget Gate Flow</div>
+
+        <div class="flow">
+          <div class="node n-hidden">h<sub>t-1</sub></div>
+          <div class="arrow">+</div>
+          <div class="node n-input">x<sub>t</sub></div>
+          <div class="arrow">→</div>
+          <div class="node n-gate">Sigmoid Layer</div>
+          <div class="arrow">→</div>
+          <div class="node n-output">Forget Vector<small>f<sub>t</sub></small></div>
+        </div>
+
+        <div class="flow">
+          <div class="node n-cell">Old Cell State<small>C<sub>t-1</sub></small></div>
+          <div class="arrow">×</div>
+          <div class="node n-output">Forget Vector<small>f<sub>t</sub></small></div>
+          <div class="arrow">→</div>
+          <div class="node n-dark">Filtered Memory</div>
+        </div>
+      </div>
+
+      <div class="formula">f<sub>t</sub> = sigmoid(W<sub>f</sub>[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>f</sub>)</div>
+
+      <div class="grid">
+        <div class="box box-red">
+          <h3><span class="dot" style="background:#dc2626"></span>Meaning</h3>
+          <ul>
+            <li>If value is close to 0, forget that information.</li>
+            <li>If value is close to 1, keep that information.</li>
+            <li>It works using point-wise multiplication.</li>
+          </ul>
+        </div>
+
+        <div class="box box-orange">
+          <h3><span class="dot" style="background:#ea580c"></span>Example</h3>
+          <ul>
+            <li>Old subject changes.</li>
+            <li>Previous context becomes irrelevant.</li>
+            <li>LSTM forgets unnecessary older memory.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header green">⬡ 8. Input Gate</div>
+    <div class="card-body">
+      <p>The input gate decides what new information should be added to the cell state.</p>
+
+      <div class="arch">
+        <div class="arch-title">Input Gate Flow</div>
+
+        <div class="flow">
+          <div class="node n-hidden">h<sub>t-1</sub></div>
+          <div class="arrow">+</div>
+          <div class="node n-input">x<sub>t</sub></div>
+        </div>
+
+        <div class="flow"><div class="arrow">↓</div></div>
+
+        <div class="flow">
+          <div class="node n-gate">Sigmoid<small>i<sub>t</sub></small></div>
+          <div class="arrow">+</div>
+          <div class="node n-gate">Tanh<small>C̃<sub>t</sub></small></div>
+        </div>
+
+        <div class="flow">
+          <div class="node n-gate">Input Gate<small>i<sub>t</sub></small></div>
+          <div class="arrow">×</div>
+          <div class="node n-gate">Candidate Memory<small>C̃<sub>t</sub></small></div>
+          <div class="arrow">→</div>
+          <div class="node n-output">New Memory Info</div>
+        </div>
+      </div>
+
+      <div class="formula">i<sub>t</sub> = sigmoid(W<sub>i</sub>[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>i</sub>)</div>
+      <div class="formula">C̃<sub>t</sub> = tanh(W<sub>c</sub>[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>c</sub>)</div>
+
+      <div class="grid">
+        <div class="box box-green">
+          <h3><span class="dot" style="background:#16a34a"></span>Input Gate Value</h3>
+          <ul>
+            <li>Decides which new information is important.</li>
+            <li>Uses sigmoid.</li>
+            <li>Output is between 0 and 1.</li>
+          </ul>
+        </div>
+
+        <div class="box box-cyan">
+          <h3><span class="dot" style="background:#0891b2"></span>Candidate Cell State</h3>
+          <ul>
+            <li>Creates possible new memory.</li>
+            <li>Uses tanh activation.</li>
+            <li>Values are between -1 and 1.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header orange">⬡ 9. Updating the Cell State</div>
+    <div class="card-body">
+      <p>Now LSTM combines old memory and new memory to create the current cell state C<sub>t</sub>.</p>
+
+      <div class="arch">
+        <div class="arch-title">Cell State Update</div>
+
+        <div class="flow">
+          <div class="node n-cell">Old Memory<small>C<sub>t-1</sub></small></div>
+          <div class="arrow">×</div>
+          <div class="node n-gate">Forget Gate<small>f<sub>t</sub></small></div>
+          <div class="arrow">=</div>
+          <div class="node n-dark">Kept Old Memory</div>
+        </div>
+
+        <div class="flow">
+          <div class="node n-gate">Input Gate<small>i<sub>t</sub></small></div>
+          <div class="arrow">×</div>
+          <div class="node n-gate">Candidate Memory<small>C̃<sub>t</sub></small></div>
+          <div class="arrow">=</div>
+          <div class="node n-dark">New Useful Memory</div>
+        </div>
+
+        <div class="flow">
+          <div class="node n-dark">Kept Old Memory</div>
+          <div class="arrow">+</div>
+          <div class="node n-dark">New Useful Memory</div>
+          <div class="arrow">→</div>
+          <div class="node n-output">Updated Cell State<small>C<sub>t</sub></small></div>
+        </div>
+      </div>
+
+      <div class="formula">C<sub>t</sub> = f<sub>t</sub> × C<sub>t-1</sub> + i<sub>t</sub> × C̃<sub>t</sub></div>
+
+      <div class="note">
+        <b>Intuition:</b> Current cell state = useful old memory + useful new memory.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header blue">⬡ 10. Output Gate</div>
+    <div class="card-body">
+      <p>The output gate decides what information should become the current hidden state h<sub>t</sub>.</p>
+
+      <div class="arch">
+        <div class="arch-title">Output Gate Flow</div>
+
+        <div class="flow">
+          <div class="node n-hidden">h<sub>t-1</sub></div>
+          <div class="arrow">+</div>
+          <div class="node n-input">x<sub>t</sub></div>
+          <div class="arrow">→</div>
+          <div class="node n-gate">Sigmoid</div>
+          <div class="arrow">→</div>
+          <div class="node n-output">Output Gate<small>o<sub>t</sub></small></div>
+        </div>
+
+        <div class="flow">
+          <div class="node n-cell">Updated Cell<small>C<sub>t</sub></small></div>
+          <div class="arrow">→</div>
+          <div class="node n-gate">tanh</div>
+          <div class="arrow">×</div>
+          <div class="node n-output">Output Gate<small>o<sub>t</sub></small></div>
+          <div class="arrow">→</div>
+          <div class="node n-hidden">Hidden State<small>h<sub>t</sub></small></div>
+        </div>
+      </div>
+
+      <div class="formula">o<sub>t</sub> = sigmoid(W<sub>o</sub>[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>o</sub>)</div>
+      <div class="formula">h<sub>t</sub> = o<sub>t</sub> × tanh(C<sub>t</sub>)</div>
+
+      <div class="grid">
+        <div class="box box-blue">
+          <h3><span class="dot" style="background:#2563eb"></span>Meaning</h3>
+          <ul>
+            <li>Uses the updated cell state.</li>
+            <li>Filters it through output gate.</li>
+            <li>Creates hidden state for the current time step.</li>
+          </ul>
+        </div>
+
+        <div class="box box-purple">
+          <h3><span class="dot" style="background:#7c3aed"></span>Use of h<sub>t</sub></h3>
+          <ul>
+            <li>Can be used as current output.</li>
+            <li>Passed to the next time step.</li>
+            <li>Represents short-term context.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header purple">⬡ 11. Complete LSTM Step-by-Step Flow</div>
+    <div class="card-body">
+      <div class="arch">
+        <div class="arch-title">Full LSTM Processing at Time Step t</div>
+
+        <div class="flow">
+          <div class="node n-input">Input<small>x<sub>t</sub></small></div>
+          <div class="arrow">+</div>
+          <div class="node n-hidden">Previous Hidden<small>h<sub>t-1</sub></small></div>
+          <div class="arrow">+</div>
+          <div class="node n-cell">Previous Cell<small>C<sub>t-1</sub></small></div>
+        </div>
+
+        <div class="flow"><div class="arrow">↓</div></div>
+
+        <div class="flow">
+          <div class="node n-gate">1. Forget<small>f<sub>t</sub></small></div>
+          <div class="arrow">→</div>
+          <div class="node n-gate">2. Add New Info<small>i<sub>t</sub>, C̃<sub>t</sub></small></div>
+          <div class="arrow">→</div>
+          <div class="node n-cell">3. Update Memory<small>C<sub>t</sub></small></div>
+          <div class="arrow">→</div>
+          <div class="node n-output">4. Output<small>h<sub>t</sub></small></div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="box box-red">
+          <h3><span class="dot" style="background:#dc2626"></span>Step 1</h3>
+          <ul><li>Forget useless old memory using forget gate.</li></ul>
+        </div>
+
+        <div class="box box-green">
+          <h3><span class="dot" style="background:#16a34a"></span>Step 2</h3>
+          <ul><li>Create new candidate memory using input gate.</li></ul>
+        </div>
+
+        <div class="box box-yellow">
+          <h3><span class="dot" style="background:#ca8a04"></span>Step 3</h3>
+          <ul><li>Update cell state by combining old and new memory.</li></ul>
+        </div>
+
+        <div class="box box-blue">
+          <h3><span class="dot" style="background:#2563eb"></span>Step 4</h3>
+          <ul><li>Create hidden state using output gate.</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header dark">⬡ 12. Important Equations</div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table>
+          <tr>
+            <th>Part</th>
+            <th>Equation</th>
+            <th>Meaning</th>
+          </tr>
+          <tr>
+            <td>Forget Gate</td>
+            <td>f<sub>t</sub> = sigmoid(W<sub>f</sub>[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>f</sub>)</td>
+            <td>Decides what to forget from old cell state.</td>
+          </tr>
+          <tr>
+            <td>Input Gate</td>
+            <td>i<sub>t</sub> = sigmoid(W<sub>i</sub>[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>i</sub>)</td>
+            <td>Decides what new information to store.</td>
+          </tr>
+          <tr>
+            <td>Candidate Cell State</td>
+            <td>C̃<sub>t</sub> = tanh(W<sub>c</sub>[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>c</sub>)</td>
+            <td>Creates possible new memory.</td>
+          </tr>
+          <tr>
+            <td>Cell State Update</td>
+            <td>C<sub>t</sub> = f<sub>t</sub> × C<sub>t-1</sub> + i<sub>t</sub> × C̃<sub>t</sub></td>
+            <td>Combines old useful memory and new useful memory.</td>
+          </tr>
+          <tr>
+            <td>Output Gate</td>
+            <td>o<sub>t</sub> = sigmoid(W<sub>o</sub>[h<sub>t-1</sub>, x<sub>t</sub>] + b<sub>o</sub>)</td>
+            <td>Decides what should be output.</td>
+          </tr>
+          <tr>
+            <td>Hidden State</td>
+            <td>h<sub>t</sub> = o<sub>t</sub> × tanh(C<sub>t</sub>)</td>
+            <td>Creates current output or short-term memory.</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header green">⬡ 13. Simple Real-Life Analogy</div>
+    <div class="card-body">
+      <p>Imagine you are reading a paragraph. You do not remember every word equally. Your brain continuously decides:</p>
+
+      <div class="grid">
+        <div class="box box-red">
+          <h3><span class="dot" style="background:#dc2626"></span>Forget</h3>
+          <ul>
+            <li>Remove useless or old information.</li>
+            <li>Similar to forget gate.</li>
+          </ul>
+        </div>
+
+        <div class="box box-green">
+          <h3><span class="dot" style="background:#16a34a"></span>Remember</h3>
+          <ul>
+            <li>Store important new information.</li>
+            <li>Similar to input gate.</li>
+          </ul>
+        </div>
+
+        <div class="box box-blue">
+          <h3><span class="dot" style="background:#2563eb"></span>Use</h3>
+          <ul>
+            <li>Use relevant memory to understand current word.</li>
+            <li>Similar to output gate.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="note">
+        <b>One-line intuition:</b> LSTM works like a smart memory system that decides what to forget, what to remember, and what to output.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header blue">⬡ 14. RNN vs LSTM</div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table>
+          <tr>
+            <th>Feature</th>
+            <th>Simple RNN</th>
+            <th>LSTM</th>
+          </tr>
+          <tr>
+            <td>Memory</td>
+            <td>Mainly hidden state</td>
+            <td>Cell state + hidden state</td>
+          </tr>
+          <tr>
+            <td>Long-term dependency</td>
+            <td>Weak</td>
+            <td>Strong</td>
+          </tr>
+          <tr>
+            <td>Vanishing gradient</td>
+            <td>High chance</td>
+            <td>Reduced</td>
+          </tr>
+          <tr>
+            <td>Architecture</td>
+            <td>Simple</td>
+            <td>More complex</td>
+          </tr>
+          <tr>
+            <td>Gates</td>
+            <td>No gates</td>
+            <td>Forget, Input, Output gates</td>
+          </tr>
+          <tr>
+            <td>Long sequence handling</td>
+            <td>Struggles</td>
+            <td>Better</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header purple">⬡ 15. Final Summary</div>
+    <div class="card-body">
+      <div>
+        <span class="tag tag-purple">Sequential Model</span>
+        <span class="tag tag-blue">Gated RNN</span>
+        <span class="tag tag-green">Long-Term Memory</span>
+        <span class="tag tag-red">Forget Gate</span>
+        <span class="tag tag-orange">Input Gate</span>
+        <span class="tag tag-blue">Output Gate</span>
+      </div>
+
+      <div class="grid">
+        <div class="box box-purple">
+          <h3><span class="dot" style="background:#7c3aed"></span>Definition</h3>
+          <ul>
+            <li>LSTM is a gated RNN architecture.</li>
+            <li>It is designed to handle long-term dependencies.</li>
+            <li>It uses memory cells to preserve useful information.</li>
+          </ul>
+        </div>
+
+        <div class="box box-green">
+          <h3><span class="dot" style="background:#16a34a"></span>Key Components</h3>
+          <ul>
+            <li>Cell state C<sub>t</sub></li>
+            <li>Hidden state h<sub>t</sub></li>
+            <li>Forget gate</li>
+            <li>Input gate</li>
+            <li>Output gate</li>
+          </ul>
+        </div>
+
+        <div class="box box-blue">
+          <h3><span class="dot" style="background:#2563eb"></span>Main Benefit</h3>
+          <ul>
+            <li>Remembers important context for a longer time.</li>
+            <li>Handles long sequences better than RNN.</li>
+            <li>Reduces vanishing gradient problem.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="note">
+        <b>Best one-line definition:</b> LSTM is a sequential neural network architecture that improves RNN by using gated memory cells to preserve long-term context and handle long sequences more effectively.
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
